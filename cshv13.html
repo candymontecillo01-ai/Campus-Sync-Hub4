@@ -1,0 +1,1253 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Sync Hub | CCCDO</title>
+
+<style>
+:root {
+  --dark:#064b2b;
+  --green:#08783f;
+  --bright:#18a85a;
+  --light:#e7f7ed;
+  --pale:#f5fcf7;
+  --bg:#f4f8f5;
+  --white:#fff;
+  --text:#18362a;
+  --muted:#718178;
+  --border:#dce8df;
+  --red:#d63b4b;
+  --yellow:#f4a300;
+  --blue:#2878c8;
+  --shadow:0 12px 35px rgba(6,75,43,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{
+  background:white;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.header-inner{
+  max-width:1250px;
+  margin:auto;
+  padding:13px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{
+  width:52px;height:52px;object-fit:contain;
+  border-radius:12px;
+}
+.brand h1{font-size:17px;color:var(--dark)}
+.brand p{font-size:11px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.container{max-width:1200px;margin:auto;padding:25px 22px 60px}
+.hero{
+  padding:35px;
+  border-radius:25px;
+  background:linear-gradient(120deg,#043f24,#08783f,#18a85a);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+  margin:15px 0 25px;
+}
+.hero h2{font-size:clamp(25px,4vw,39px);margin-bottom:10px}
+.hero p{line-height:1.6;color:#e1f5e8;max-width:650px}
+.hero-mark{
+  width:105px;height:105px;object-fit:contain;
+  background:white;padding:8px;border-radius:20px;
+}
+.tabs{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:5px 2px 14px;margin-bottom:18px;
+}
+.tab{
+  white-space:nowrap;border:1px solid var(--border);
+  background:white;color:var(--muted);
+  border-radius:12px;padding:12px 17px;
+  font-size:13px;font-weight:700;
+}
+.tab.active,.tab:hover{
+  background:var(--green);color:white;border-color:var(--green);
+}
+.panel{display:none}
+.panel.active{display:block}
+.section-heading{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:15px;margin:15px 0 20px;
+}
+.section-heading h2{font-size:23px}
+.section-heading p{font-size:12px;color:var(--muted);margin-top:5px}
+.grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.card{
+  background:white;border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);
+}
+.card h3{font-size:16px;margin:12px 0 8px}
+.card p{font-size:13px;line-height:1.6;color:var(--muted)}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.tag{
+  display:inline-block;padding:6px 9px;border-radius:30px;
+  background:var(--light);color:var(--green);
+  font-size:10px;font-weight:800;
+}
+.tag.urgent{background:#fff0f2;color:#a31f2d}
+.tag.event{background:#eaf4ff;color:#145c9c}
+.meta{font-size:11px;color:var(--muted)}
+.btn{
+  border:0;border-radius:10px;padding:10px 14px;
+  background:var(--green);color:white;font-weight:700;
+  font-size:12px;
+}
+.btn:hover{filter:brightness(.94)}
+.btn.secondary{background:var(--light);color:var(--green)}
+.btn.danger{background:#fff0f2;color:var(--red)}
+.btn.dark{background:var(--dark)}
+.btn.small{padding:7px 10px;font-size:11px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;
+}
+input,textarea,select{
+  width:100%;padding:11px 12px;
+  border:1px solid var(--border);border-radius:10px;
+  outline:none;background:white;color:var(--text);
+}
+input:focus,textarea:focus,select:focus{border-color:var(--green)}
+textarea{min-height:100px;resize:vertical}
+.field{margin-bottom:13px}
+.field label{
+  display:block;font-size:12px;font-weight:700;
+  margin-bottom:6px;
+}
+.search{max-width:350px}
+.form-card{max-width:700px}
+.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.empty{
+  padding:35px;text-align:center;color:var(--muted);
+  background:white;border:1px dashed var(--border);
+  border-radius:var(--radius);
+}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:13px;margin-bottom:22px;
+}
+.stat{
+  background:white;border:1px solid var(--border);
+  padding:18px;border-radius:15px;
+}
+.stat strong{display:block;font-size:27px;color:var(--green)}
+.stat span{font-size:11px;color:var(--muted)}
+.table-wrap{
+  overflow-x:auto;background:white;border:1px solid var(--border);
+  border-radius:15px;
+}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{
+  padding:13px;text-align:left;border-bottom:1px solid var(--border);
+  font-size:12px;vertical-align:top;
+}
+th{background:var(--pale);color:var(--dark)}
+td{line-height:1.5}
+.status{
+  display:inline-block;border-radius:20px;padding:5px 9px;
+  font-size:10px;font-weight:800;background:#fff6d9;color:#765b00;
+}
+.status.processing{background:#eaf4ff;color:#145c9c}
+.status.ready,.status.approved{background:#e8f8ee;color:#126b3b}
+.status.rejected{background:#fff0f2;color:#a31f2d}
+.status.claimed{background:#eee9ff;color:#6545a5}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+.item-card{display:flex;flex-direction:column;gap:10px}
+.item-card .btn{align-self:flex-start}
+.notice{
+  padding:13px 15px;border-radius:12px;
+  background:#fff8df;color:#735700;
+  font-size:12px;line-height:1.5;margin-bottom:17px;
+}
+.success{
+  padding:12px;background:var(--light);color:var(--dark);
+  border-radius:10px;font-size:12px;margin:10px 0;
+}
+.error{
+  padding:12px;background:#fff0f2;color:#a31f2d;
+  border-radius:10px;font-size:12px;margin:10px 0;
+}
+.login-wrap{
+  min-height:70vh;display:grid;place-items:center;
+}
+.login-card{
+  width:min(430px,100%);padding:30px;background:white;
+  border:1px solid var(--border);border-radius:22px;
+  box-shadow:var(--shadow);
+}
+.login-card h2{margin:12px 0 8px}
+.login-card p{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px}
+.hidden{display:none!important}
+footer{
+  padding:25px;text-align:center;color:var(--muted);
+  border-top:1px solid var(--border);font-size:11px;
+}
+@media(max-width:850px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:580px){
+  .header-inner{padding:10px 14px}
+  .brand img{width:42px;height:42px}
+  .brand h1{font-size:14px}
+  .brand p{font-size:9px}
+  .container{padding:15px 13px 40px}
+  .hero{padding:24px;min-height:180px}
+  .hero-mark{width:65px;height:65px}
+  .grid{grid-template-columns:1fr}
+  .section-heading{align-items:flex-start;flex-direction:column}
+  .stats{gap:8px}
+  .stat{padding:13px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="https://snipboard.io/JgsWik.jpg" alt="CCCDO Logo">
+      <div>
+        <h1>Campus Sync Hub</h1>
+        <p>City College of Cagayan de Oro</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn secondary small" id="portalToggle" onclick="showAdminLogin()">
+        Admin Portal
+      </button>
+      <button class="btn small hidden" id="backStudent" onclick="showStudentPortal()">
+        Student Portal
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= STUDENT PORTAL ================= -->
+
+<main class="container" id="studentPortal">
+
+  <section class="hero">
+    <div>
+      <h2>Your campus.<br>One connected space.</h2>
+      <p>
+        Stay updated with important campus announcements, submit document
+        requests, and check the lost-and-found board through one convenient
+        student portal.
+      </p>
+    </div>
+    <img class="hero-mark" src="https://snipboard.io/JgsWik.jpg" alt="College logo">
+  </section>
+
+  <nav class="tabs" aria-label="Student navigation">
+    <button class="tab active" data-tab="student-home">Overview</button>
+    <button class="tab" data-tab="student-announcements">Announcements</button>
+    <button class="tab" data-tab="student-documents">Document Requests</button>
+    <button class="tab" data-tab="student-lost">Lost &amp; Found</button>
+  </nav>
+
+  <section class="panel active" id="student-home">
+    <div class="section-heading">
+      <div>
+        <h2>Welcome to Campus Sync Hub</h2>
+        <p>Your central space for campus updates and student services.</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong id="homeAnnouncementCount">0</strong><span>Announcements</span></div>
+      <div class="stat"><strong id="homeRequestCount">0</strong><span>Your submitted requests</span></div>
+      <div class="stat"><strong id="homeLostCount">0</strong><span>Lost &amp; found listings</span></div>
+      <div class="stat"><strong>24/7</strong><span>Portal access</span></div>
+    </div>
+
+    <div class="section-heading">
+      <div>
+        <h2>Latest Announcements</h2>
+        <p>Recent updates posted by the campus administrator.</p>
+      </div>
+      <button class="btn secondary" onclick="openStudentTab('student-announcements')">View all</button>
+    </div>
+    <div class="grid" id="homeAnnouncements"></div>
+  </section>
+
+  <section class="panel" id="student-announcements">
+    <div class="section-heading">
+      <div>
+        <h2>Campus Announcements</h2>
+        <p>Important updates, reminders, and notices.</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input class="search" id="announcementSearch" placeholder="Search announcements..." oninput="renderStudentAnnouncements()">
+      <select style="max-width:190px" id="announcementFilter" onchange="renderStudentAnnouncements()">
+        <option value="all">All categories</option>
+        <option value="Academic">Academic</option>
+        <option value="Event">Events</option>
+        <option value="Urgent">Urgent</option>
+        <option value="General">General</option>
+      </select>
+    </div>
+    <div class="grid" id="studentAnnouncements"></div>
+  </section>
+
+  <section class="panel" id="student-documents">
+    <div class="section-heading">
+      <div>
+        <h2>Document Requests</h2>
+        <p>Submit a request and monitor its status.</p>
+      </div>
+    </div>
+
+    <div class="notice">
+      Please provide accurate student information. Your request will be forwarded
+      to the administrator for review. This demo does not issue official school documents.
+    </div>
+
+    <div class="card form-card">
+      <h3>Submit a Document Request</h3>
+      <form id="documentForm">
+        <div class="field">
+          <label for="docStudentName">Full Name</label>
+          <input id="docStudentName" required placeholder="Enter your full name">
+        </div>
+        <div class="field">
+          <label for="docStudentId">Student ID Number</label>
+          <input id="docStudentId" required placeholder="Enter your student ID">
+        </div>
+        <div class="field">
+          <label for="docCourse">Program / Course</label>
+          <input id="docCourse" required placeholder="e.g. BSOA">
+        </div>
+        <div class="field">
+          <label for="docType">Document Requested</label>
+          <select id="docType" required>
+            <option value="">Select a document</option>
+            <option>Certificate of Enrollment</option>
+            <option>Certificate of Grades</option>
+            <option>Transcript of Records</option>
+            <option>Good Moral Certificate</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="docPurpose">Purpose of Request</label>
+          <textarea id="docPurpose" required placeholder="State the purpose of your request"></textarea>
+        </div>
+        <button class="btn" type="submit">Submit Request</button>
+      </form>
+      <div id="documentMessage"></div>
+    </div>
+
+    <div class="section-heading">
+      <div>
+        <h2>My Requests</h2>
+        <p>Use your student ID to identify your submitted requests.</p>
+      </div>
+    </div>
+    <div class="card form-card">
+      <div class="field">
+        <label for="lookupStudentId">Enter your Student ID</label>
+        <input id="lookupStudentId" placeholder="Student ID number">
+      </div>
+      <button class="btn secondary" onclick="lookupMyRequests()">Check Requests</button>
+    </div>
+    <div id="myRequests" style="margin-top:15px"></div>
+  </section>
+
+  <section class="panel" id="student-lost">
+    <div class="section-heading">
+      <div>
+        <h2>Lost &amp; Found Board</h2>
+        <p>Browse items listed by the campus administrator.</p>
+      </div>
+    </div>
+    <div class="notice">
+      If you recognize an item, submit a claim request. The administrator will
+      review your information before coordinating the next steps.
+    </div>
+    <div class="grid" id="studentLostItems"></div>
+  </section>
+</main>
+
+<!-- ================= ADMIN LOGIN ================= -->
+
+<main class="container hidden" id="adminLogin">
+  <div class="login-wrap">
+    <div class="login-card">
+      <img src="https://snipboard.io/JgsWik.jpg" alt="CCCDO Logo" style="width:65px;height:65px;object-fit:contain">
+      <h2>Administrator Access</h2>
+      <p>Sign in to manage announcements and review student submissions.</p>
+      <form id="loginForm">
+        <div class="field">
+          <label for="adminPassword">Administrator Password</label>
+          <input id="adminPassword" type="password" required placeholder="Enter admin password">
+        </div>
+        <button class="btn" type="submit" style="width:100%">Access Admin Portal</button>
+      </form>
+      <div id="loginMessage"></div>
+      <button class="btn secondary" style="width:100%;margin-top:12px" onclick="showStudentPortal()">Back to Student Portal</button>
+    </div>
+  </div>
+</main>
+
+<!-- ================= ADMIN PORTAL ================= -->
+
+<main class="container hidden" id="adminPortal">
+
+  <section class="hero">
+    <div>
+      <h2>Administrator Dashboard</h2>
+      <p>Manage campus announcements, document requests, and lost-and-found submissions.</p>
+    </div>
+    <div>
+      <button class="btn secondary" onclick="adminLogout()">Log Out</button>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="Admin navigation">
+    <button class="tab active" data-tab="admin-home">Dashboard</button>
+    <button class="tab" data-tab="admin-announcements">Announcements</button>
+    <button class="tab" data-tab="admin-requests">Document Requests</button>
+    <button class="tab" data-tab="admin-claims">Claim Requests</button>
+    <button class="tab" data-tab="admin-items">Lost &amp; Found Manager</button>
+  </nav>
+
+  <section class="panel active" id="admin-home">
+    <div class="section-heading">
+      <div>
+        <h2>Portal Overview</h2>
+        <p>Summary of current portal activity.</p>
+      </div>
+      <button class="btn secondary" onclick="renderAdmin()">Refresh</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="adminAnnouncementCount">0</strong><span>Announcements</span></div>
+      <div class="stat"><strong id="adminPendingRequests">0</strong><span>Pending document requests</span></div>
+      <div class="stat"><strong id="adminPendingClaims">0</strong><span>Pending claim requests</span></div>
+      <div class="stat"><strong id="adminItemCount">0</strong><span>Lost &amp; found listings</span></div>
+    </div>
+    <div class="card">
+      <h3>Administrator Reminders</h3>
+      <p>Review incoming submissions regularly and update their status so students can monitor their requests.</p>
+      <p style="margin-top:10px">Announcements saved here will automatically appear on the student portal when both views use the same browser storage.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="admin-announcements">
+    <div class="section-heading">
+      <div>
+        <h2>Announcement Manager</h2>
+        <p>Create, edit, and remove student announcements.</p>
+      </div>
+    </div>
+
+    <div class="card form-card" style="margin-bottom:20px">
+      <h3 id="announcementFormHeading">Create Announcement</h3>
+      <form id="adminAnnouncementForm">
+        <input type="hidden" id="editAnnouncementId">
+        <div class="field">
+          <label for="adminAnnouncementTitle">Announcement Title</label>
+          <input id="adminAnnouncementTitle" required placeholder="Enter announcement title">
+        </div>
+        <div class="field">
+          <label for="adminAnnouncementCategory">Category</label>
+          <select id="adminAnnouncementCategory">
+            <option>Academic</option>
+            <option>Event</option>
+            <option>Urgent</option>
+            <option>General</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="adminAnnouncementDate">Date</label>
+          <input type="date" id="adminAnnouncementDate" required>
+        </div>
+        <div class="field">
+          <label for="adminAnnouncementBody">Announcement Details</label>
+          <textarea id="adminAnnouncementBody" required placeholder="Write the announcement details..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="submit" id="saveAnnouncementButton">Publish Announcement</button>
+          <button class="btn secondary" type="button" onclick="resetAnnouncementForm()">Clear Form</button>
+        </div>
+      </form>
+      <div id="announcementAdminMessage"></div>
+    </div>
+
+    <div class="section-heading">
+      <div><h2>Published Announcements</h2></div>
+    </div>
+    <div class="grid" id="adminAnnouncementList"></div>
+  </section>
+
+  <section class="panel" id="admin-requests">
+    <div class="section-heading">
+      <div>
+        <h2>Document Request Inbox</h2>
+        <p>Review student requests and update their status.</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input class="search" id="requestSearch" placeholder="Search by name or student ID..." oninput="renderAdminRequests()">
+      <select style="max-width:180px" id="requestStatusFilter" onchange="renderAdminRequests()">
+        <option value="all">All statuses</option>
+        <option>Pending</option>
+        <option>Processing</option>
+        <option>Ready</option>
+        <option>Rejected</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket</th><th>Student</th><th>Document</th>
+            <th>Purpose</th><th>Date</th><th>Status</th><th>Update</th>
+          </tr>
+        </thead>
+        <tbody id="adminRequestRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="admin-claims">
+    <div class="section-heading">
+      <div>
+        <h2>Lost Item Claim Inbox</h2>
+        <p>Review students' claim requests.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Claim ID</th><th>Item</th><th>Student</th>
+            <th>Student ID</th><th>Details</th><th>Status</th><th>Update</th>
+          </tr>
+        </thead>
+        <tbody id="adminClaimRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="admin-items">
+    <div class="section-heading">
+      <div>
+        <h2>Lost &amp; Found Manager</h2>
+        <p>Add listings and update or remove items.</p>
+      </div>
+    </div>
+    <div class="card form-card" style="margin-bottom:20px">
+      <h3 id="itemFormHeading">Add Lost &amp; Found Item</h3>
+      <form id="adminItemForm">
+        <input type="hidden" id="editItemId">
+        <div class="field">
+          <label for="itemName">Item Name</label>
+          <input id="itemName" required placeholder="e.g. Black tumbler">
+        </div>
+        <div class="field">
+          <label for="itemLocation">Where It Was Found</label>
+          <input id="itemLocation" required placeholder="e.g. Library">
+        </div>
+        <div class="field">
+          <label for="itemDate">Date Found</label>
+          <input type="date" id="itemDate" required>
+        </div>
+        <div class="field">
+          <label for="itemDescription">Description</label>
+          <textarea id="itemDescription" required placeholder="Describe the item without exposing private identifying details."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="submit">Save Item</button>
+          <button class="btn secondary" type="button" onclick="resetItemForm()">Clear Form</button>
+        </div>
+      </form>
+      <div id="itemAdminMessage"></div>
+    </div>
+    <div class="grid" id="adminItemList"></div>
+  </section>
+</main>
+
+<footer>
+  Campus Sync Hub · City College of Cagayan de Oro · Student Information Portal Demo
+</footer>
+
+<script>
+/* =========================================================
+   CAMPUS SYNC HUB
+   Shared browser storage for student/admin demo
+   ========================================================= */
+
+const STORAGE_KEY = "campusSyncHubData_v1";
+
+/*
+  Password is checked using a SHA-256 hash instead of storing
+  the plain password in the JavaScript.
+
+  IMPORTANT: A front-end-only password is not secure authentication.
+  Use a server-side login system for a real public deployment.
+*/
+const ADMIN_PASSWORD_HASH =
+"d8e248ef22e61e4f89de2e1c635babe6031e2c4e8be3f91defdf5a0377b1a005";
+
+const defaultData = {
+  announcements: [
+    {
+      id:"ann-001",
+      title:"Welcome to Campus Sync Hub",
+      category:"General",
+      date:"2026-11-18",
+      body:"Welcome to the Campus Sync Hub student portal. Check this page regularly for campus updates and important reminders."
+    },
+    {
+      id:"ann-002",
+      title:"Academic Reminders",
+      category:"Academic",
+      date:"2026-11-18",
+      body:"Students are encouraged to monitor their class announcements and coordinate with their instructors regarding academic requirements."
+    },
+    {
+      id:"ann-003",
+      title:"Campus Information Updates",
+      category:"Urgent",
+      date:"2026-11-18",
+      body:"Please check official school communication channels for verified campus notices and schedule changes."
+    }
+  ],
+  requests:[],
+  claims:[],
+  items:[
+    {
+      id:"item-001",
+      name:"Black Tumbler",
+      location:"Library",
+      date:"2026-11-17",
+      description:"A black reusable tumbler was turned over to the campus lost-and-found desk.",
+      status:"Available"
+    },
+    {
+      id:"item-002",
+      name:"Blue Notebook",
+      location:"Classroom Area",
+      date:"2026-11-16",
+      description:"A blue notebook was found in the classroom area.",
+      status:"Available"
+    }
+  ]
+};
+
+let data = loadData();
+let adminAuthenticated = false;
+
+function loadData(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      return {
+        announcements:Array.isArray(parsed.announcements)?parsed.announcements:[],
+        requests:Array.isArray(parsed.requests)?parsed.requests:[],
+        claims:Array.isArray(parsed.claims)?parsed.claims:[],
+        items:Array.isArray(parsed.items)?parsed.items:[]
+      };
+    }
+  }catch(error){
+    console.error("Could not load portal data:",error);
+  }
+  return structuredClone(defaultData);
+}
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  renderAll();
+}
+
+function makeId(prefix){
+  return prefix+"-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[char]);
+}
+
+function formatDate(date){
+  if(!date)return "Not specified";
+  const parsed = new Date(date+"T00:00:00");
+  if(Number.isNaN(parsed.getTime()))return escapeHTML(date);
+  return parsed.toLocaleDateString("en-PH",{
+    year:"numeric",month:"short",day:"numeric"
+  });
+}
+
+function statusClass(status){
+  return String(status||"pending").toLowerCase().replace(/\s+/g,"-");
+}
+
+/* ---------------- PORTAL SWITCHING ---------------- */
+
+function showStudentPortal(){
+  document.getElementById("studentPortal").classList.remove("hidden");
+  document.getElementById("adminLogin").classList.add("hidden");
+  document.getElementById("adminPortal").classList.add("hidden");
+  document.getElementById("portalToggle").classList.remove("hidden");
+  document.getElementById("backStudent").classList.add("hidden");
+  renderAll();
+}
+
+function showAdminLogin(){
+  document.getElementById("studentPortal").classList.add("hidden");
+  document.getElementById("adminPortal").classList.add("hidden");
+  document.getElementById("adminLogin").classList.remove("hidden");
+  document.getElementById("portalToggle").classList.add("hidden");
+  document.getElementById("backStudent").classList.remove("hidden");
+  document.getElementById("loginMessage").innerHTML="";
+  document.getElementById("adminPassword").value="";
+}
+
+function showAdminPortal(){
+  document.getElementById("studentPortal").classList.add("hidden");
+  document.getElementById("adminLogin").classList.add("hidden");
+  document.getElementById("adminPortal").classList.remove("hidden");
+  document.getElementById("portalToggle").classList.add("hidden");
+  document.getElementById("backStudent").classList.remove("hidden");
+  renderAll();
+}
+
+function adminLogout(){
+  adminAuthenticated=false;
+  showStudentPortal();
+}
+
+/* ---------------- TAB NAVIGATION ---------------- */
+
+document.querySelectorAll(".tabs").forEach(tabBar=>{
+  tabBar.addEventListener("click",event=>{
+    const button=event.target.closest("[data-tab]");
+    if(!button)return;
+
+    const tabId=button.dataset.tab;
+    const root=tabBar.parentElement;
+
+    root.querySelectorAll(".tabs .tab").forEach(tab=>tab.classList.remove("active"));
+    root.querySelectorAll(".panel").forEach(panel=>panel.classList.remove("active"));
+
+    button.classList.add("active");
+    const target=document.getElementById(tabId);
+    if(target)target.classList.add("active");
+  });
+});
+
+function openStudentTab(tabId){
+  document.querySelectorAll("#studentPortal .tabs .tab").forEach(tab=>{
+    tab.classList.toggle("active",tab.dataset.tab===tabId);
+  });
+  document.querySelectorAll("#studentPortal .panel").forEach(panel=>{
+    panel.classList.toggle("active",panel.id===tabId);
+  });
+}
+
+/* ---------------- ADMIN LOGIN ---------------- */
+
+async function sha256(value){
+  const bytes=new TextEncoder().encode(value);
+  const hash=await crypto.subtle.digest("SHA-256",bytes);
+  return Array.from(new Uint8Array(hash))
+    .map(byte=>byte.toString(16).padStart(2,"0")).join("");
+}
+
+document.getElementById("loginForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const password=document.getElementById("adminPassword").value;
+  const message=document.getElementById("loginMessage");
+
+  try{
+    const hash=await sha256(password);
+    if(hash===ADMIN_PASSWORD_HASH){
+      adminAuthenticated=true;
+      message.innerHTML="";
+      showAdminPortal();
+    }else{
+      message.innerHTML='<div class="error">Incorrect password. Please try again.</div>';
+    }
+  }catch(error){
+    message.innerHTML='<div class="error">Password verification is unavailable in this browser. Try opening the page through a local web server.</div>';
+  }
+});
+
+/* ---------------- STUDENT ANNOUNCEMENTS ---------------- */
+
+function announcementCard(item){
+  const category=item.category||"General";
+  const tagClass=category==="Urgent"?"urgent":category==="Event"?"event":"";
+  return `
+    <article class="card">
+      <div class="card-top">
+        <span class="tag ${tagClass}">${escapeHTML(category)}</span>
+        <span class="meta">${formatDate(item.date)}</span>
+      </div>
+      <h3>${escapeHTML(item.title)}</h3>
+      <p>${escapeHTML(item.body)}</p>
+    </article>`;
+}
+
+function renderStudentAnnouncements(){
+  const query=(document.getElementById("announcementSearch")?.value||"").toLowerCase();
+  const filter=document.getElementById("announcementFilter")?.value||"all";
+
+  const list=data.announcements.filter(item=>{
+    const matchesText=(item.title+" "+item.body+" "+item.category).toLowerCase().includes(query);
+    const matchesCategory=filter==="all"||item.category===filter;
+    return matchesText&&matchesCategory;
+  }).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+  document.getElementById("studentAnnouncements").innerHTML=list.length
+    ?list.map(announcementCard).join("")
+    :'<div class="empty">No announcements found.</div>';
+
+  document.getElementById("homeAnnouncements").innerHTML=
+    data.announcements.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""))
+      .slice(0,3).map(announcementCard).join("")
+    ||'<div class="empty">There are no announcements yet.</div>';
+}
+
+/* ---------------- STUDENT DOCUMENT REQUESTS ---------------- */
+
+document.getElementById("documentForm").addEventListener("submit",event=>{
+  event.preventDefault();
+
+  const request={
+    id:makeId("REQ"),
+    name:document.getElementById("docStudentName").value.trim(),
+    studentId:document.getElementById("docStudentId").value.trim(),
+    course:document.getElementById("docCourse").value.trim(),
+    document:document.getElementById("docType").value,
+    purpose:document.getElementById("docPurpose").value.trim(),
+    date:new Date().toISOString().slice(0,10),
+    status:"Pending"
+  };
+
+  if(!request.name||!request.studentId||!request.course||!request.document||!request.purpose){
+    document.getElementById("documentMessage").innerHTML=
+      '<div class="error">Please complete all required fields.</div>';
+    return;
+  }
+
+  data.requests.unshift(request);
+  saveData();
+
+  document.getElementById("documentForm").reset();
+  document.getElementById("documentMessage").innerHTML=
+    `<div class="success">Request submitted successfully. Your reference number is <strong>${escapeHTML(request.id)}</strong>.</div>`;
+});
+
+function lookupMyRequests(){
+  const studentId=document.getElementById("lookupStudentId").value.trim();
+  const output=document.getElementById("myRequests");
+
+  if(!studentId){
+    output.innerHTML='<div class="error">Please enter your student ID.</div>';
+    return;
+  }
+
+  const results=data.requests.filter(request=>request.studentId.toLowerCase()===studentId.toLowerCase());
+
+  if(!results.length){
+    output.innerHTML='<div class="empty">No requests were found for that student ID.</div>';
+    return;
+  }
+
+  output.innerHTML=results.map(request=>`
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-top">
+        <strong>${escapeHTML(request.document)}</strong>
+        <span class="status ${statusClass(request.status)}">${escapeHTML(request.status)}</span>
+      </div>
+      <p style="margin-top:8px">Reference: ${escapeHTML(request.id)}</p>
+      <p>Submitted: ${formatDate(request.date)}</p>
+    </div>
+  `).join("");
+}
+
+/* ---------------- STUDENT LOST & FOUND ---------------- */
+
+function renderStudentItems(){
+  const available=data.items.filter(item=>item.status!=="Claimed");
+
+  document.getElementById("studentLostItems").innerHTML=available.length
+    ?available.map(item=>`
+      <article class="card item-card">
+        <div class="card-top">
+          <span class="tag">Available</span>
+          <span class="meta">${formatDate(item.date)}</span>
+        </div>
+        <h3>${escapeHTML(item.name)}</h3>
+        <p><strong>Location:</strong> ${escapeHTML(item.location)}</p>
+        <p>${escapeHTML(item.description)}</p>
+        <button class="btn" onclick="openClaimForm('${item.id}')">Request to Claim</button>
+      </article>
+    `).join("")
+    :'<div class="empty">No available lost-and-found listings at the moment.</div>';
+}
+
+function openClaimForm(itemId){
+  const item=data.items.find(entry=>entry.id===itemId);
+  if(!item)return;
+
+  const name=prompt("Enter your full name:");
+  if(!name||!name.trim())return;
+
+  const studentId=prompt("Enter your student ID:");
+  if(!studentId||!studentId.trim())return;
+
+  const details=prompt("Describe the item or explain why you believe it belongs to you:");
+  if(!details||!details.trim())return;
+
+  data.claims.unshift({
+    id:makeId("CLM"),
+    itemId:item.id,
+    itemName:item.name,
+    name:name.trim(),
+    studentId:studentId.trim(),
+    details:details.trim(),
+    date:new Date().toISOString().slice(0,10),
+    status:"Pending"
+  });
+
+  saveData();
+  alert("Your claim request has been submitted for administrator review.");
+}
+
+/* ---------------- ADMIN ANNOUNCEMENTS ---------------- */
+
+function resetAnnouncementForm(){
+  document.getElementById("adminAnnouncementForm").reset();
+  document.getElementById("editAnnouncementId").value="";
+  document.getElementById("announcementFormHeading").textContent="Create Announcement";
+  document.getElementById("saveAnnouncementButton").textContent="Publish Announcement";
+  document.getElementById("announcementAdminMessage").innerHTML="";
+}
+
+document.getElementById("adminAnnouncementForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  if(!adminAuthenticated)return;
+
+  const id=document.getElementById("editAnnouncementId").value;
+  const announcement={
+    id:id||makeId("ANN"),
+    title:document.getElementById("adminAnnouncementTitle").value.trim(),
+    category:document.getElementById("adminAnnouncementCategory").value,
+    date:document.getElementById("adminAnnouncementDate").value,
+    body:document.getElementById("adminAnnouncementBody").value.trim()
+  };
+
+  if(!announcement.title||!announcement.date||!announcement.body)return;
+
+  if(id){
+    const index=data.announcements.findIndex(item=>item.id===id);
+    if(index!==-1)data.announcements[index]=announcement;
+  }else{
+    data.announcements.unshift(announcement);
+  }
+
+  saveData();
+  resetAnnouncementForm();
+  document.getElementById("announcementAdminMessage").innerHTML=
+    '<div class="success">Announcement saved and published to the student portal.</div>';
+});
+
+function editAnnouncement(id){
+  const item=data.announcements.find(entry=>entry.id===id);
+  if(!item)return;
+
+  document.getElementById("editAnnouncementId").value=item.id;
+  document.getElementById("adminAnnouncementTitle").value=item.title;
+  document.getElementById("adminAnnouncementCategory").value=item.category;
+  document.getElementById("adminAnnouncementDate").value=item.date;
+  document.getElementById("adminAnnouncementBody").value=item.body;
+
+  document.getElementById("announcementFormHeading").textContent="Edit Announcement";
+  document.getElementById("saveAnnouncementButton").textContent="Save Changes";
+  document.getElementById("adminAnnouncementForm").scrollIntoView({behavior:"smooth"});
+}
+
+function deleteAnnouncement(id){
+  if(!adminAuthenticated)return;
+  if(!confirm("Delete this announcement?"))return;
+  data.announcements=data.announcements.filter(item=>item.id!==id);
+  saveData();
+}
+
+function renderAdminAnnouncements(){
+  const list=document.getElementById("adminAnnouncementList");
+  list.innerHTML=data.announcements.length
+    ?data.announcements.map(item=>`
+      <article class="card">
+        <div class="card-top">
+          <span class="tag">${escapeHTML(item.category)}</span>
+          <span class="meta">${formatDate(item.date)}</span>
+        </div>
+        <h3>${escapeHTML(item.title)}</h3>
+        <p>${escapeHTML(item.body)}</p>
+        <div class="form-actions">
+          <button class="btn secondary small" onclick="editAnnouncement('${item.id}')">Edit</button>
+          <button class="btn danger small" onclick="deleteAnnouncement('${item.id}')">Delete</button>
+        </div>
+      </article>
+    `).join("")
+    :'<div class="empty">No announcements have been published.</div>';
+}
+
+/* ---------------- ADMIN DOCUMENT REQUESTS ---------------- */
+
+function renderAdminRequests(){
+  const query=(document.getElementById("requestSearch")?.value||"").toLowerCase();
+  const filter=document.getElementById("requestStatusFilter")?.value||"all";
+
+  const results=data.requests.filter(request=>{
+    const matches=(request.name+" "+request.studentId+" "+request.document).toLowerCase().includes(query);
+    return matches&&(filter==="all"||request.status===filter);
+  });
+
+  document.getElementById("adminRequestRows").innerHTML=results.length
+    ?results.map(request=>`
+      <tr>
+        <td><strong>${escapeHTML(request.id)}</strong></td>
+        <td>${escapeHTML(request.name)}<br><span class="meta">${escapeHTML(request.studentId)} · ${escapeHTML(request.course)}</span></td>
+        <td>${escapeHTML(request.document)}</td>
+        <td>${escapeHTML(request.purpose)}</td>
+        <td>${formatDate(request.date)}</td>
+        <td><span class="status ${statusClass(request.status)}">${escapeHTML(request.status)}</span></td>
+        <td>
+          <select onchange="updateRequestStatus('${request.id}',this.value)" aria-label="Update request status">
+            ${["Pending","Processing","Ready","Rejected"].map(status=>
+              `<option ${request.status===status?"selected":""}>${status}</option>`
+            ).join("")}
+          </select>
+        </td>
+      </tr>
+    `).join("")
+    :'<tr><td colspan="7">No document requests received yet.</td></tr>';
+}
+
+function updateRequestStatus(id,status){
+  if(!adminAuthenticated)return;
+  const request=data.requests.find(item=>item.id===id);
+  if(!request)return;
+  request.status=status;
+  saveData();
+}
+
+/* ---------------- ADMIN CLAIM REQUESTS ---------------- */
+
+function renderAdminClaims(){
+  const list=document.getElementById("adminClaimRows");
+
+  list.innerHTML=data.claims.length
+    ?data.claims.map(claim=>`
+      <tr>
+        <td><strong>${escapeHTML(claim.id)}</strong><br><span class="meta">${formatDate(claim.date)}</span></td>
+        <td>${escapeHTML(claim.itemName)}</td>
+        <td>${escapeHTML(claim.name)}</td>
+        <td>${escapeHTML(claim.studentId)}</td>
+        <td>${escapeHTML(claim.details)}</td>
+        <td><span class="status ${statusClass(claim.status)}">${escapeHTML(claim.status)}</span></td>
+        <td>
+          <select onchange="updateClaimStatus('${claim.id}',this.value)">
+            ${["Pending","Processing","Approved","Rejected"].map(status=>
+              `<option ${claim.status===status?"selected":""}>${status}</option>`
+            ).join("")}
+          </select>
+        </td>
+      </tr>
+    `).join("")
+    :'<tr><td colspan="7">No claim requests received yet.</td></tr>';
+}
+
+function updateClaimStatus(id,status){
+  if(!adminAuthenticated)return;
+  const claim=data.claims.find(item=>item.id===id);
+  if(!claim)return;
+
+  claim.status=status;
+
+  if(status==="Approved"){
+    const item=data.items.find(entry=>entry.id===claim.itemId);
+    if(item)item.status="Claimed";
+  }
+
+  if(status==="Rejected"||status==="Pending"||status==="Processing"){
+    const item=data.items.find(entry=>entry.id===claim.itemId);
+    if(item)item.status="Available";
+  }
+
+  saveData();
+}
+
+/* ---------------- ADMIN LOST & FOUND MANAGER ---------------- */
+
+function resetItemForm(){
+  document.getElementById("adminItemForm").reset();
+  document.getElementById("editItemId").value="";
+  document.getElementById("itemFormHeading").textContent="Add Lost & Found Item";
+  document.getElementById("itemAdminMessage").innerHTML="";
+}
+
+document.getElementById("adminItemForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  if(!adminAuthenticated)return;
+
+  const id=document.getElementById("editItemId").value;
+  const item={
+    id:id||makeId("ITEM"),
+    name:document.getElementById("itemName").value.trim(),
+    location:document.getElementById("itemLocation").value.trim(),
+    date:document.getElementById("itemDate").value,
+    description:document.getElementById("itemDescription").value.trim(),
+    status:"Available"
+  };
+
+  if(id){
+    const old=data.items.find(entry=>entry.id===id);
+    if(old)item.status=old.status;
+    const index=data.items.findIndex(entry=>entry.id===id);
+    if(index!==-1)data.items[index]=item;
+  }else{
+    data.items.unshift(item);
+  }
+
+  saveData();
+  resetItemForm();
+  document.getElementById("itemAdminMessage").innerHTML=
+    '<div class="success">Lost-and-found listing saved.</div>';
+});
+
+function editItem(id){
+  const item=data.items.find(entry=>entry.id===id);
+  if(!item)return;
+
+  document.getElementById("editItemId").value=item.id;
+  document.getElementById("itemName").value=item.name;
+  document.getElementById("itemLocation").value=item.location;
+  document.getElementById("itemDate").value=item.date;
+  document.getElementById("itemDescription").value=item.description;
+  document.getElementById("itemFormHeading").textContent="Edit Lost & Found Item";
+
+  document.getElementById("adminItemForm").scrollIntoView({behavior:"smooth"});
+}
+
+function deleteItem(id){
+  if(!adminAuthenticated)return;
+  if(!confirm("Remove this lost-and-found listing?"))return;
+  data.items=data.items.filter(item=>item.id!==id);
+  data.claims=data.claims.filter(claim=>claim.itemId!==id);
+  saveData();
+}
+
+function renderAdminItems(){
+  const list=document.getElementById("adminItemList");
+  list.innerHTML=data.items.length
+    ?data.items.map(item=>`
+      <article class="card">
+        <div class="card-top">
+          <span class="tag">${escapeHTML(item.status)}</span>
+          <span class="meta">${formatDate(item.date)}</span>
+        </div>
+        <h3>${escapeHTML(item.name)}</h3>
+        <p><strong>Location:</strong> ${escapeHTML(item.location)}</p>
+        <p>${escapeHTML(item.description)}</p>
+        <div class="form-actions">
+          <button class="btn secondary small" onclick="editItem('${item.id}')">Edit</button>
+          <button class="btn danger small" onclick="deleteItem('${item.id}')">Delete</button>
+        </div>
+      </article>
+    `).join("")
+    :'<div class="empty">No lost-and-found items listed.</div>';
+}
+
+/* ---------------- DASHBOARD AND RENDERING ---------------- */
+
+function renderAdminDashboard(){
+  document.getElementById("adminAnnouncementCount").textContent=data.announcements.length;
+  document.getElementById("adminPendingRequests").textContent=
+    data.requests.filter(item=>item.status==="Pending").length;
+  document.getElementById("adminPendingClaims").textContent=
+    data.claims.filter(item=>item.status==="Pending").length;
+  document.getElementById("adminItemCount").textContent=data.items.length;
+}
+
+function renderStudentDashboard(){
+  document.getElementById("homeAnnouncementCount").textContent=data.announcements.length;
+  document.getElementById("homeRequestCount").textContent=data.requests.length;
+  document.getElementById("homeLostCount").textContent=data.items.filter(item=>item.status!=="Claimed").length;
+}
+
+function renderAdmin(){
+  if(!adminAuthenticated)return;
+  renderAdminDashboard();
+  renderAdminAnnouncements();
+  renderAdminRequests();
+  renderAdminClaims();
+  renderAdminItems();
+}
+
+function renderAll(){
+  renderStudentDashboard();
+  renderStudentAnnouncements();
+  renderStudentItems();
+
+  if(adminAuthenticated)renderAdmin();
+}
+
+/* ---------------- CROSS-TAB / CROSS-WINDOW SYNC ---------------- */
+
+/*
+  The storage event updates another tab or window using the same
+  browser profile. Both portals must be opened from the same browser
+  and on the same device for this localStorage demo to synchronize.
+*/
+window.addEventListener("storage",event=>{
+  if(event.key===STORAGE_KEY){
+    data=loadData();
+    renderAll();
+  }
+});
+
+/* ---------------- INITIALIZE ---------------- */
+
+renderAll();
+
+</script>
+</body>
+</html>
